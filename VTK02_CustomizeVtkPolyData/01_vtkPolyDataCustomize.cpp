@@ -13,6 +13,7 @@ VTK_MODULE_INIT(vtkRenderingVolumeOpenGL2)
 #include<vtkRenderWindow.h>
 #include<vtkRenderer.h>
 #include<vtkRenderWindowInteractor.h>
+#include<vtkInteractorStyleMultiTouchCamera.h>
 #include<vtkProperty.h>
 #include<vtkActor.h>
 #include<vtkFloatArray.h>
@@ -41,9 +42,38 @@ int main(int argc, char* argv[])
 
 	//创建多边形
 	vtkSmartPointer<vtkPolygon> polygon = vtkSmartPointer<vtkPolygon>::New();
+	polygon->GetPointIds()->SetNumberOfIds(5);//设置点数
+	polygon->GetPointIds()->SetId(0, 0);//设置点索引，第一位是点的索引，第二位是多边形的索引
+	polygon->GetPointIds()->SetId(1, 1);//设置点索引
+	polygon->GetPointIds()->SetId(2, 2);//设置点索引
+	polygon->GetPointIds()->SetId(3, 3);//设置点索引
+
+	//创建三角形
+	vtkSmartPointer<vtkTriangle> triangle = vtkSmartPointer<vtkTriangle>::New();
+	triangle->GetPointIds()->SetNumberOfIds(3);//设置点数
+	triangle->GetPointIds()->SetId(0, 1);//设置点索引
+	triangle->GetPointIds()->SetId(1, 2);//设置点索引
+	triangle->GetPointIds()->SetId(2, 4);//设置点索引
+
+	//创建单元数据
+	vtkSmartPointer<vtkCellArray> cells = vtkSmartPointer<vtkCellArray>::New();
+	cells->InsertNextCell(polygon);//插入多边形
+	cells->InsertNextCell(triangle);//插入三角形
+
+	//可视化管线
+	//创建多边形数据
+	vtkSmartPointer<vtkPolyData> polyData = vtkSmartPointer<vtkPolyData>::New();
+	polyData->SetPoints(points);//设置点
+	polyData->SetPolys(cells);//设置单元数据
+
+
+	//建立渲染管线，定义vtkPolyDataMapper对象，用于接受vtkPolyData图形数据以实现图形数据到渲染图元的转换
+	vtkSmartPointer<vtkPolyDataMapper> polygonMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+	polygonMapper->SetInputData(polyData);//绑定单元数据源
 
 	//创建Actor
 	vtkSmartPointer<vtkActor> polygonActor = vtkSmartPointer<vtkActor>::New();
+	polygonActor->SetMapper(polygonMapper);//绑定Mapper对象
 
 
 	//创建渲染器Renderer
