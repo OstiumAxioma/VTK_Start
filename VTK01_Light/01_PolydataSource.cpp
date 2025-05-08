@@ -77,5 +77,5 @@ int main(int argc, char* argv[])
 	renderWindow->Render();//渲染窗口
 	renderWindowInteractor->Start();//开始交互
 
-	//测试分支
+	return EXIT_SUCCESS;
 }
