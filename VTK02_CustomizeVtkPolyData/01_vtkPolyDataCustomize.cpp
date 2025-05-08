@@ -74,6 +74,8 @@ int main(int argc, char* argv[])
 	//创建Actor
 	vtkSmartPointer<vtkActor> polygonActor = vtkSmartPointer<vtkActor>::New();
 	polygonActor->SetMapper(polygonMapper);//绑定Mapper对象
+	polygonActor->GetProperty()->SetEdgeVisibility(true);//获取边缘可见性
+	polygonActor->GetProperty()->SetEdgeColor(0, 0, 0);//设置边缘颜色
 
 
 	//创建渲染器Renderer
