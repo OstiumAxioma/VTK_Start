@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="01_Light.cpp">
+    <ClCompile Include="01_vtkPolyDataCustomize.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
