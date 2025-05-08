@@ -7,99 +7,75 @@ VTK_MODULE_INIT(vtkInteractionStyle);
 #include<vtkRenderer.h>
 #include<vtkRenderWindowInteractor.h>
 #include<vtkInteractorStyleMultiTouchCamera.h>
+#include<vtkPolyData.h>
+#include<vtkOpenGLProperty.h>
 #include<vtkCylinderSource.h>
+#include<vtkConeSource.h>
 #include<vtkCubeSource.h>
 #include<vtkPolyDataMapper.h>
 #include<vtkActor.h>
 #include<iostream>
 #include <vtkProperty.h>
-using namespace std;
 
-
-void  main()
+int main(int argc, char* argv[])
 {
+	//定义一个锥体
+	vtkSmartPointer<vtkConeSource> coneSource = vtkSmartPointer<vtkConeSource>::New();
+	coneSource->SetCenter(0, 0, 0);
+	coneSource->SetRadius(5);
+	coneSource->SetHeight(10);
+	coneSource->SetResolution(10);
+	coneSource->SetAngle(30);
+	coneSource->SetDirection(0, 1, 0);//显示方向
 
-	//1.  vtkCylinderSource  继承自  vtkPolyDataAlgorithm
-	//中心在渲染场景的原点的柱体
-	vtkSmartPointer<vtkCylinderSource>  cylinder = vtkSmartPointer<vtkCylinderSource>::New();
-	cylinder->SetCenter(0, 0, 0);
-	cylinder->SetHeight(8.0);
-	cylinder->SetRadius(3);
-	cylinder->SetResolution(100);//柱面截面的多边形的边数
-	cylinder->Update();
+	//Update一定要有,更新数据源
+	coneSource->Update();
 
+	//Polydata数据结构是vtk的一个重要数据结构
+	vtkSmartPointer<vtkPolyData> cone = coneSource->GetOutput();
 
-	vtkSmartPointer<vtkCubeSource>  cube = vtkSmartPointer<vtkCubeSource>::New();
-	cube->SetCenter(10, 10, 10);
-	cube->SetXLength(10);
+	int nPoints = cone->GetNumberOfPoints();
+	int nCells = cone->GetNumberOfCells();
+	int nVerts = cone->GetNumberOfVerts();
 
+	std::cout << "nPoints: " << nPoints << std::endl;
+	std::cout << "nCells: " << nCells << std::endl;
+	std::cout << "nVerts: " << nVerts << std::endl;
 
-	//2.渲染多边形几何数据
+	//建立渲染管线，定义vtkPolyDataMapper对象，用于接受vtkPolyData图形数据以实现图形数据到渲染图元的转换
+	vtkSmartPointer<vtkPolyDataMapper> coneMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+	coneMapper->SetInputData(cone);//绑定PolyData数据源
 
-	//对输入数据进行渲染
-	//cylinerMapper->SetInputConnection(）数据输入接口
-	//cylinder->GetOutputPort()                 可视化管线的输出数据接口
+	//建立Actor对象
+	vtkSmartPointer<vtkActor> coneActor = vtkSmartPointer<vtkActor>::New();
+	coneActor->SetMapper(coneMapper);//绑定Mapper对象
+	coneActor->GetProperty()->SetColor(1, 0, 0);//设置颜色
+	coneActor->GetProperty()->SetOpacity(0.5);//设置透明度
 
-	vtkSmartPointer<vtkPolyDataMapper>  cylinerMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-	///	cylinerMapper->SetInputConnection(cylinder->GetOutputPort());
-	cylinerMapper->SetInputData(cylinder->GetOutput());
+	//创建渲染器Renderer
+	vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
+	renderer->AddActor(coneActor);//添加Actor
+	renderer->SetBackground(1.0, 1.0, 0.0);//设置背景颜色
 
+	renderer->ResetCamera();
 
-	vtkSmartPointer<vtkPolyData>  data = cylinder->GetOutput();
+	//创建渲染窗口
+	vtkSmartPointer<vtkRenderWindow> renderWindow = vtkSmartPointer<vtkRenderWindow>::New();
+	renderWindow->AddRenderer(renderer);//添加渲染器
+	renderWindow->SetSize(640, 480);//设置窗口大小
+	renderWindow->SetWindowName("PolyData Example");//设置窗口名称
 
-	vtkSmartPointer<vtkPolyDataMapper>  cubeMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-	cubeMapper->SetInputConnection(cube->GetOutputPort());
+	//创建渲染窗口交互器
+	vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor = vtkSmartPointer<vtkRenderWindowInteractor>::New();
+	renderWindowInteractor->SetRenderWindow(renderWindow);//绑定渲染窗口
 
+	//设置交互器样式
+	vtkSmartPointer<vtkInteractorStyleTrackballCamera> style = vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New();
 
-	// cylinerMapper->SetInputData(PolyData);
-	// cylinerMapper->SetInputData(cylinder->GetOutput());
+	renderWindowInteractor->SetInteractorStyle(style);//绑定交互器样式
 
-	//3. 把数据可视化表达(演员)
+	renderWindow->Render();//渲染窗口
+	renderWindowInteractor->Start();//开始交互
 
-	vtkSmartPointer<vtkActor>   cylinderActor = vtkSmartPointer<vtkActor>::New();
-	cylinderActor->SetMapper(cylinerMapper);//
-	cylinderActor->GetProperty()->SetOpacity(1);
-
-
-	vtkSmartPointer<vtkActor>   cubeActor = vtkSmartPointer<vtkActor>::New();
-	cubeActor->SetMapper(cubeMapper);
-	cubeActor->GetProperty()->SetColor(1, 1, 1);
-
-
-
-	//4. 管理场景的渲染过程（舞台）
-	vtkSmartPointer<vtkRenderer>  renderer = vtkSmartPointer<vtkRenderer>::New();
-
-
-
-	renderer->RemoveAllViewProps();
-	renderer->AddActor(cylinderActor);
-	renderer->AddActor(cubeActor);
-	//renderer->SetBackground(0.5, 0.6, 0.1);
-
-
-	renderer->RemoveAllLights();
-
-
-
-	//5.显示窗口（剧院）
-	vtkSmartPointer<vtkRenderWindow> renWin = vtkSmartPointer<vtkRenderWindow>::New();
-	renWin->AddRenderer(renderer);
-	renWin->SetSize(500, 500);
-	renWin->SetWindowName("VTK");
-
-
-
-
-	//6.  鼠标 键盘 交互(演员和观众的交互)
-	vtkSmartPointer<vtkRenderWindowInteractor>  iren = vtkSmartPointer<vtkRenderWindowInteractor>::New();
-	iren->SetRenderWindow(renWin);
-
-	//观众的眼睛
-	//vtkSmartPointer<vtkInteractorStyleTrackballCamera>  style = vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New();
-	//iren->SetInteractorStyle(style);
-
-	iren->Initialize();
-	iren->Start();
-
+	return EXIT_SUCCESS;
 }
