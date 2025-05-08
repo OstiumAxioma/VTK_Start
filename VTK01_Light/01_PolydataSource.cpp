@@ -65,5 +65,15 @@ int main(int argc, char* argv[])
 	renderWindow->SetSize(640, 480);//设置窗口大小
 	renderWindow->SetWindowName("PolyData Example");//设置窗口名称
 
+	//创建渲染窗口交互器
+	vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor = vtkSmartPointer<vtkRenderWindowInteractor>::New();
+	renderWindowInteractor->SetRenderWindow(renderWindow);//绑定渲染窗口
+
+	//设置交互器样式
+	vtkSmartPointer<vtkInteractorStyleTrackballCamera> style = vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New();
+
+	renderWindowInteractor->SetInteractorStyle(style);//绑定交互器样式
+
 	renderWindow->Render();//渲染窗口
+	renderWindowInteractor->Start();//开始交互
 }
