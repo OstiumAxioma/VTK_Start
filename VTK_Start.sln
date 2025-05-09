@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VTK01_PolyData", "VTK01_Pol
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VTK02_CustomizeVtkPolyData", "VTK02_CustomizeVtkPolyData\VTK02_CustomizeVtkPolyData.vcxproj", "{530F9992-AD16-4294-AA4B-EC88E3A9437C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VTK03_CustomizeVtkPoint", "VTK03_CustomizeVtkPoint\VTK03_CustomizeVtkPoint.vcxproj", "{F952E5DC-C95B-4EF4-8C52-A26E03B72C61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{530F9992-AD16-4294-AA4B-EC88E3A9437C}.Release|x64.Build.0 = Release|x64
 		{530F9992-AD16-4294-AA4B-EC88E3A9437C}.Release|x86.ActiveCfg = Release|Win32
 		{530F9992-AD16-4294-AA4B-EC88E3A9437C}.Release|x86.Build.0 = Release|Win32
+		{F952E5DC-C95B-4EF4-8C52-A26E03B72C61}.Debug|x64.ActiveCfg = Debug|x64
+		{F952E5DC-C95B-4EF4-8C52-A26E03B72C61}.Debug|x64.Build.0 = Debug|x64
+		{F952E5DC-C95B-4EF4-8C52-A26E03B72C61}.Debug|x86.ActiveCfg = Debug|Win32
+		{F952E5DC-C95B-4EF4-8C52-A26E03B72C61}.Debug|x86.Build.0 = Debug|Win32
+		{F952E5DC-C95B-4EF4-8C52-A26E03B72C61}.Release|x64.ActiveCfg = Release|x64
+		{F952E5DC-C95B-4EF4-8C52-A26E03B72C61}.Release|x64.Build.0 = Release|x64
+		{F952E5DC-C95B-4EF4-8C52-A26E03B72C61}.Release|x86.ActiveCfg = Release|Win32
+		{F952E5DC-C95B-4EF4-8C52-A26E03B72C61}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
